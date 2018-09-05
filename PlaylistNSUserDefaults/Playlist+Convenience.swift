@@ -11,7 +11,7 @@ import CoreData
 
 extension Playlist {
     
-    
+    @discardableResult
     convenience init(name: String) {
         self.init(context: CoreDataStack.context)
         self.name = name

@@ -10,14 +10,25 @@ import Foundation
 import CoreData
 
 
-enum CoreDataStack {
+enum CoreDataStack{
     
-    static let container: NSPersistentStore = {
+    
+    static let container: NSPersistentContainer = {
         
-        let container= NSPersistentContainer(name: "PlaylistNSUserDefaults")
-        container.loadPersistentStores(completionHandler: <#T##(NSPersistentStoreDescription, Error?) -> Void#>)
+        let container = NSPersistentContainer(name: "PlaylistNSUserDefaults")
+        container.loadPersistentStores(completionHandler: { (_, error) in
+            if let error = error{
+                fatalError("Failed to Load Data from Persistent Store")
+            }
+        })
+        return container
     }()
+    
+    static var context: NSManagedObjectContext {
+        return container.viewContext
+    }
 }
+
 
 
 

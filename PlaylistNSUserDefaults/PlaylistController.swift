@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 class PlaylistController {
     fileprivate static let PlaylistsKey = "playlists"
@@ -14,41 +15,39 @@ class PlaylistController {
     static let shared = PlaylistController()
     
     init() {
-        loadFromPersistentStore()
     }
     
 	func add(playlistWithName name: String) {
-		let playlist = Playlist(name: name)
-		playlists.append(playlist)
-		saveToPersistentStore()
-	}
-	
-	func delete(playlist: Playlist) {
-		guard let index = playlists.index(of: playlist) else { return }
-		playlists.remove(at: index)
-		saveToPersistentStore()
-	}
-	
-	func add(song: Song, toPlaylist playlist: Playlist) {
-		playlist.songs.append(song)
-		saveToPersistentStore()
-	}
-	
-	func remove(song: Song, fromPlaylist playlist: Playlist) {
-		guard let index = playlist.songs.index(of: song) else { return }
-		playlist.songs.remove(at: index)
-		saveToPersistentStore()
-	}
+        Playlist(name: name)
+        saveToPersistentStore()
+    }
+    
+    func delete(playlist: Playlist) {
+        playlist.managedObjectContext?.delete(playlist)
+        saveToPersistentStore()
+    }
 	
 	// MARK: Persistence
 	
     func saveToPersistentStore() {
-    }
-    
-    func loadFromPersistentStore() {
+        do{
+            try CoreDataStack.context.save()
+        }catch {
+            print("There was an error in \(#function) : \(error) \(error.localizedDescription)")
     }
 	
 	// MARK: Properties 
 	
-	var playlists = [Playlist]()
+    var playlists: [Playlist]{
+        //i WANT ALL THE PLAYLIST BACK FROM THE HARDDRIVE
+        let request: NSFetchRequest<Playlist> = Playlist.fetchRequest()
+        do{
+            try CoreDataStack.context.fetch(request)
+        }catch {
+            print("There was an error in \(#function) : \(error) \(error.localizedDescription)")
+        }
+        return []
+        
+    }
+}
 }

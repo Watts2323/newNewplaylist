@@ -30,15 +30,17 @@ class SongTableViewController: UITableViewController {
 	// MARK: UITableViewDataSource/Delegate
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return playlist?.songs.count ?? 0
+        guard let songs = playlist?.songs else {return 0}
+        return songs.count
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath)
 		
 		if let song = playlist?.songs[indexPath.row] {
+            guard let songs = playlist.songs else (return UITableViewCell(){
 			cell.textLabel?.text = song.name
-			cell.detailTextLabel?.text = song.artist
+			cell.detailTextLabel?.text = song?.artist
 		}
 		
 		return cell
@@ -63,4 +65,5 @@ class SongTableViewController: UITableViewController {
 	
 	@IBOutlet weak var songTextField: UITextField!
 	@IBOutlet weak var artistTextField: UITextField!
+}
 }

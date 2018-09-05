@@ -32,12 +32,14 @@ class PlaylistTableViewController: UITableViewController {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath)
 		
 		let playlist = PlaylistController.shared.playlists[indexPath.row]
+        
+        guard let songs = playlist.songs else {return UITableViewCell()}
 		cell.textLabel?.text = playlist.name
         
         if playlist.songs.count == 1 {
             cell.detailTextLabel?.text = "1 Song"
         } else {
-            cell.detailTextLabel?.text = "\(playlist.songs.count) Songs"
+            cell.detailTextLabel?.text = "\(songs.count) Songs"
         }
 		
 		return cell

@@ -12,11 +12,12 @@ import CoreData
 
 
 extension Song {
-    
-    convenience init(artist: String, title: String){
+    @discardableResult
+    convenience init(artist: String, title: String, playlist: Playlist){
         self.init(context: CoreDataStack.context)
         self.artist = artist
         self.title = title
+        self.playlist = playlist
     }
 }
 
